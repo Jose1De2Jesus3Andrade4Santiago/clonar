@@ -1,0 +1,18 @@
+cmd.exe
+/X
+/C
+""C:\Program Files\Java\jdk1.8.0_111\jre\..\bin\javadoc.exe" @options @argfile"
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\allclasses-frame.html = 1612909257790
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\allclasses-noframe.html = 1612909257795
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\argfile = 1612909254273
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\constant-values.html = 1612909257615
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\deprecated-list.html = 1612909257776
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\help-doc.html = 1612909257819
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\index-all.html = 1612909257760
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\index.html = 1612909257800
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\options = 1612909254265
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\overview-tree.html = 1612909257742
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\package-list = 1612909257577
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\script.js = 1612909257835
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\serialized-form.html = 1612909257642
+C:\Users\mrchu\Documents\NetBeansProjects\Nuevo\target\apidocs\stylesheet.css = 1612909257829
