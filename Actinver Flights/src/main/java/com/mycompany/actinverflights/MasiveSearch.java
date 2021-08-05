@@ -322,11 +322,15 @@ public void modifyLabel() {
         vuelosInfo.add(array);
 
         for (String[] registro : csv) {
-            buscar(registro, vuelosInfo);
+            try {
+                buscar(registro, vuelosInfo);
+            } catch (Exception e) {
+                continue;
+            }
         }
 
         //GUARDAMOS LA INFORMACIÓN
-        saveInfo(this.savPath, "ArchivoVuelosActinver", vuelosInfo);
+        saveInfo(this.savPath, "ArchivoVuelosActinver--" + getDate("dd-MM-YYY"), vuelosInfo);
 
     }
 
@@ -334,8 +338,8 @@ public void modifyLabel() {
         WebDriver driver = null;
         ErrorWindow window = new ErrorWindow();
         window.getjLabel1().setText("<html><p>Parece que el driver no corresponde al navegador seleccionado o el navegador seleccionado no se encuentra instalado en el equipo</p></html>");
-        System.out.println("Este es el navegador" + this.idNavegador);
-        System.out.println("Esta es la ruta del navegador" + this.rutaDriver);
+        //System.out.println("Este es el navegador" + this.idNavegador);
+        //System.out.println("Esta es la ruta del navegador" + this.rutaDriver);
         try {
             if (rutaDriver.equals("")) {
                 window.setVisible(true);
@@ -359,100 +363,127 @@ public void modifyLabel() {
             window.setVisible(true);
         }
 
-        driver.get("https://www.google.com/travel/flights?tfs=CBwQARoaagwIAhIIL20vMDRzcWoSCjIwMjEtMDQtMjlwAYIBCwj___________8BQAFIAZgBAg&hl=es");
-        sleep(3000);
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        WebDriverWait wait = new WebDriverWait(driver, 30);
+        //NOS AEGURAMOS DE QUE TENER TODO CONTROLADO EN CASO DE QUE SUCEDA ALGUN ERROR
+        try {
+            driver.get("https://www.google.com/travel/flights?tfs=CBwQARoaagwIAhIIL20vMDRzcWoSCjIwMjEtMDQtMjlwAYIBCwj___________8BQAFIAZgBAg&hl=es");
+            sleep(3000);
+            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            WebDriverWait wait = new WebDriverWait(driver, 10);
 
-        //INGRESAMOS LA FECHA EN LA BUSQUEDA
-        clickDate(driver, wait, campos[0]);
+            //INGRESAMOS LA FECHA EN LA BUSQUEDA
+            clickDate(driver, wait, campos[0]);
 
-        //INYECTAMOS LA CLASE DEL VUELO Y EL NUMERO DE PASAJEROS
-        clickDatos(driver, wait, campos[3], campos[4]);
+            //INYECTAMOS LA CLASE DEL VUELO Y EL NUMERO DE PASAJEROS
+            clickDatos(driver, wait, campos[3], campos[4]);
 
-        //DAMOS CLICK A LA CIUDAD DE ORIGEN Y LA CIUDAD DE DESTINO
-        clickCities(driver, wait, campos[1], campos[2]);
+            //DAMOS CLICK A LA CIUDAD DE ORIGEN Y LA CIUDAD DE DESTINO
+            clickCities(driver, wait, campos[1], campos[2]);
 
-        //DAMOS CLICK EN EL BOTON DE BUSCAR
-        WebElement searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@jsname='vLv7Lb']")));
-        searchButton.click();
+            //DAMOS CLICK EN EL BOTON DE BUSCAR
+            WebElement searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@jsname='vLv7Lb']")));
+            searchButton.click();
 
-        //DESCARGAMOS LOS DATOS DE LA BUSQUEDA
-        //Damaos click en el boton de escalas y selecionamos sin escalas
-        WebElement escalasButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@jsname='XPtOyb']")));
-        escalasButton.click();
-        WebElement listaEsclaas = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@jsname='IW6exe']")));
+            //DESCARGAMOS LOS DATOS DE LA BUSQUEDA
+            /*
+         * SI EXISTE EL BOTON DE TODOS LOS FILTROS
+             */
+            //WebElement codigo = driver.findElement(By.xpath("//*"));
+            //String html = codigo.getAttribute("innerHTML");
+            //Damaos click en el boton de escalas y selecionamos sin escalas
+            WebElement escalasButton;
+            //Damos click en el boton de escales
+            escalasButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Escalas']")));
+            escalasButton.click();
+            //WebElement listaEsclaas = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@jsname='IW6exe']")));
 
-        List<WebElement> inputsEsclaas = listaEsclaas.findElements(By.xpath("//li[@class='Bblesf']"));
+            //List<WebElement> inputsEsclaas = listaEsclaas.findElements(By.xpath("//li[@class='Bblesf']"));
+            //WebElement sinEscalasdiv = inputsEsclaas.get(1)/*.findElement(By.xpath("//div[@class='VfPpkd-GCYh9b kDzhGf ZCYEwf wHsUjf']"))*/;
+            //WebElement input = sinEscalasdiv.findElement(By.xpath("//input[@jsname='YPqjbf']"));
+            sleep(1000);
+            WebElement sinEscalasdiv = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//li[./label[contains(text(),'Solo sin escalas')]]")));
+            sinEscalasdiv.click();
+            //sinEscalasdiv.sendKeys(Keys.ENTER);
+            List<WebElement> Xbutton = driver.findElements(By.xpath("//button[@aria-label='Cerrar']"));
+            System.out.println("CANTIDAD DE CERRAR QUE HAY: " + Xbutton.size());
+            /*try {
+        	Xbutton = driver.findElement(By.xpath("//button[@jsname='plIjzf']"));
+        }catch(Exception e) {
+        	Xbutton = driver.findElement(By.className("VfPpkd-Bz112c-LgbsSe.yHy1rc.eT1oJ.evEd9e.HJuSVb"));
+        }*/
+            Xbutton.get(2).click();
+            sleep(1000);
 
-        WebElement sinEscalasdiv = inputsEsclaas.get(1)/*.findElement(By.xpath("//div[@class='VfPpkd-GCYh9b kDzhGf ZCYEwf wHsUjf']"))*/;
-        //WebElement input = sinEscalasdiv.findElement(By.xpath("//input[@jsname='YPqjbf']"));
-        sleep(1000);
-        sinEscalasdiv.click();
-        WebElement Xbutton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@jsname='plIjzf']")));
-        Xbutton.click();
-        sleep(1000);
+            //Damos click en el boton de ordenar por costo
+            WebElement divInfo = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='mi3osf NppLad']")));
+            WebElement OrderByButton = divInfo.findElements(By.xpath("//button[@jsname='LgbsSe']")).get(3);
+            OrderByButton.click();
 
-        //Damos click en el boton de ordenar por costo
-        WebElement divInfo = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='mi3osf NppLad']")));
-        WebElement OrderByButton = divInfo.findElements(By.xpath("//button[@jsname='LgbsSe']")).get(3);
-        OrderByButton.click();
+            //
+            WebElement listaDesplegable = divInfo.findElement(By.xpath("//ul[@class='Akxp3 Kpu42c Lxea9c']"));
+            WebElement option = listaDesplegable.findElement(By.xpath("//li[text()='Precio']"));
+            option.click();
 
-        //
-        WebElement listaDesplegable = divInfo.findElement(By.xpath("//ul[@class='Akxp3 Kpu42c Lxea9c']"));
-        WebElement option = listaDesplegable.findElement(By.xpath("//li[text()='Precio']"));
-        option.click();
+            sleep(3000);
 
-        sleep(10000);
+            //Obtenemos la información de cada vuelo
+            WebElement divVuelos = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='VKb8lb H4aYKc']")));
+            List<WebElement> vuelos = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']"));
+            vuelos = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']"));
+            WebElement vuelo;
+            String vueleo;
 
-        //Obtenemos la información de cada vuelo
-        WebElement divVuelos = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='VKb8lb H4aYKc']")));
-        List<WebElement> vuelos = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']"));
-        WebElement vuelo;
-        String vueleo;
+            //Guardamos la info de cadad vuelo en un arreglo 
+            //List<String[]> vuelosInfo = new ArrayList<>();
+            int i = 0;
+            String[] registro;
 
-        //Guardamos la info de cadad vuelo en un arreglo 
-        //List<String[]> vuelosInfo = new ArrayList<>();
-        int i = 0;
-        String[] registro;
+            vuelo = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).get(0);
+            vueleo = vuelo.getText();
+            registro = vueleo.split("\n");
+            do {
+                String[] infoVuelo = new String[6];
+                if (registro.length >= 9) {
+                    System.out.println("----------------" + i + "----------------");
+                    System.out.println(registro[5]);
+                    System.out.println(registro[6]);
+                    System.out.println(registro[3]);
+                    System.out.println(registro[registro.length - 1]);
+                    infoVuelo[0] = getDate("dd-MMM");
+                    infoVuelo[1] = campos[0];
+                    infoVuelo[2] = registro[5];//Origen
+                    infoVuelo[3] = registro[6].replace("–", "");//Destino
+                    infoVuelo[4] = registro[3].replace("AeromexicoOperado", "Aeromexico Operado");//Aerolinea
+                    infoVuelo[5] = registro[registro.length - 1].replace(" MXN", "");//Precio
+                    infoVuelo[5] = infoVuelo[5].replace(".", "");
 
-        vuelo = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).get(0);
-        vueleo = vuelo.getText();
-        registro = vueleo.split("\n");
-        do {
-            String[] infoVuelo = new String[6];
-            if (registro.length >= 9) {
-                System.out.println("----------------" + i + "----------------");
-                System.out.println(registro[5]);
-                System.out.println(registro[6]);
-                System.out.println(registro[3]);
-                System.out.println(registro[8]);
-                infoVuelo[0] = getDate("dd-MMM");
-                infoVuelo[1] = campos[0];
-                infoVuelo[2] = registro[5];//Origen
-                infoVuelo[3] = registro[6].replace("–", "");//Destino
-                infoVuelo[4] = registro[3];//Aerolinea
-                infoVuelo[5] = registro[8].replace(" MXN", "");//Precio
-                infoVuelo[5] = infoVuelo[5].replace(".", "");
+                    List<String[]> vueloos = new ArrayList<>();
+                    vueloos.add(infoVuelo);
+                    saveInfo(this.savPath, "ArchivoVuelosActinverParcial--" + getDate("dd-MM-YYY"), vueloos);
+                    vuelosInfo.add(infoVuelo);
+                }
+                i++;
+                if (i <= divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).size() - 1) {
 
-                List<String[]> vueloos = new ArrayList<>();
-                vueloos.add(infoVuelo);
-                saveInfo(this.savPath, "ArchivoVuelosActinverParcial", vueloos);
-                vuelosInfo.add(infoVuelo);
-            }
-            i++;
-            if (i <= divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).size() - 1) {
+                    registro = null;
+                    vuelo = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).get(i);
+                    vueleo = vuelo.getText();
+                    registro = vueleo.split("\n");
+                }
+            } while (registro.length >= 9 && i <= divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).size() - 1);
 
-                registro = null;
-                vuelo = divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).get(i);
-                vueleo = vuelo.getText();
-                registro = vueleo.split("\n");
-            }
-        } while (registro.length >= 9 && i <= divVuelos.findElements(By.xpath("//div[@class='mz0jqb taHBqe Qpcsfe']")).size() - 1);
+            //}
+            driver.quit();
+        } catch (Exception e) {
+            System.out.println("----------------------------------------");
+            System.out.println("| OCURRIO UN ERROR DURANTE LA BUSQUEDA |");
+            System.out.println("----------------------------------------");
+            //LISTA PARA GUARDAR LOS VUELSO QUE TUVIERON ERROR EN SU BUSQUEDA
+            List<String[]> vuelosError = new ArrayList<>();
+            vuelosError.add(campos);
+            saveInfo(this.savPath, "ArchivoVuelosConError--" + getDate("dd-MM-YYY"), vuelosError);
 
-        //}
-        driver.quit();
-
+            driver.quit();
+        }
     }
 
     public void clickDate(WebDriver driver, WebDriverWait wait, String fecha) throws InterruptedException {
@@ -537,7 +568,7 @@ public void modifyLabel() {
         WebElement destino = inputs.get(2);
         js.executeScript("arguments[0].value='" + ciudadDestino + "';", destino);
         destino.click();
-        
+
         //WebElement desListCities = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='A8nfpe yRXJAe P0ukfb a4gL0d TFC9me PRvvEd S7G7Bc Otspu iWO5td BDJ8fb']")));
         WebElement firstMatchD = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//li[@class='n4HaVc ']")));
         firstMatchD.click();
